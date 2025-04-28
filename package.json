@@ -23,14 +23,20 @@
   },
   "scripts": {
     "start:front": "react-scripts start",
-    "start": "npm run build && npm run server:prod",
-    "build": "react-scripts build",
+    "start:dev": "concurrently \"npm run server:dev\" \"npm run start:front\"",
+    "start:prod": "cross-env NODE_ENV=production npm run server:prod",
+    "start": "npm run start:dev",
+    "build:dev": "cross-env REACT_APP_ENV=development react-scripts build",
+    "build:prod": "cross-env REACT_APP_ENV=production react-scripts build",
+    "build": "npm run build:prod",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
-    "server:dev": "nodemon server.js",
-    "server:prod": "node server.js",
+    "server:dev": "cross-env NODE_ENV=development nodemon server.js",
+    "server:prod": "cross-env NODE_ENV=production node server.js",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "start:unified": "npm run build:dev && cross-env NODE_ENV=development node server.js",
+    "start:unified:dev": "npm run build:dev && cross-env NODE_ENV=development nodemon server.js"
   },
   "eslintConfig": {
     "extends": [
@@ -51,6 +57,8 @@
     ]
   },
   "devDependencies": {
+    "concurrently": "^8.2.2",
+    "cross-env": "^7.0.3",
     "nodemon": "^2.0.22"
   }
 }
